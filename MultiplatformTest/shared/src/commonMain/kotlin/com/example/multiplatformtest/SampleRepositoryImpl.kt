@@ -15,6 +15,7 @@ class SampleRepositoryImpl : SampleRepository {
         delay(RESPONSE_DELAY)
 
         emit(Resource.Success(usersCache.toList()))
+
     }.toWrappedFlow()
 
     /**
