@@ -9,6 +9,7 @@ import com.example.multiplatformtest.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainActivityViewModel : ViewModel() {
@@ -33,9 +34,9 @@ class MainActivityViewModel : ViewModel() {
 
     fun addUser() {}
 
-    fun updateUser() {}
+    fun updateUser(user: User) {}
 
-    fun deleteUser() {}
+    fun deleteUser(user: User) {}
 }
 
 sealed class MainActivityUiState {

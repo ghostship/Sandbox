@@ -6,13 +6,20 @@ struct ContentView: View {
     @StateObject var viewModel = IOSContentViewModel()
 
 	var body: some View {
-        Text("\(viewModel.state.users.count)")
-            .onAppear(perform: {
-                viewModel.getUsers()
-            })
-            .onDisappear(perform: {
-                viewModel.dispose()
-            })
+        VStack {
+            List(viewModel.state.users, id: \.id) {user in
+                RowView(user: user)
+            }.frame(height: .infinity)
+            
+            Button("Fetch Users") {}
+            Button("Create New User") {}
+        }
+        .onAppear(perform: {
+            viewModel.getUsers()
+        })
+        .onDisappear(perform: {
+            viewModel.dispose()
+        })
     }
 }
 
@@ -20,6 +27,40 @@ struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
 		ContentView()
 	}
+}
+
+struct RowView: View {
+    var user: User
+    
+    var body: some View {
+        HStack {
+            Text("\(user.id) \(user.fullName)")
+            
+            Spacer()
+            
+            Button {} label: {
+                Image(systemName: "pencil")
+            }
+            
+            Spacer().frame(width: 20)
+            
+            Button {} label: {
+                Image(systemName: "trash")
+            }
+        }
+    }
+    
+}
+
+struct RowView_Previews: PreviewProvider {
+    static var previews: some View {
+        var user = User(
+            id: 1,
+            firstName: "Bob",
+            lastName: "Testman")
+        
+        RowView(user: user)
+    }
 }
 
 extension ContentView {
@@ -45,7 +86,7 @@ extension ContentView {
                     } else if let resource = resource as? ResourceSuccess {
                         self.state = ContentUiState(
                             isLoading: false,
-                            users: convertArray(resource.data)
+                            users: self.convertArray(nsArray: resource.data)
                         )
                         
                     } else if (resource is ResourceError) {
@@ -63,8 +104,8 @@ extension ContentView {
             getUsersHandle?.dispose()
         }
         
-        private func convertArray<T>(nsArray: NSArray) -> Array<T>? {
-            
+        private func convertArray<T>(nsArray: NSArray) -> Array<T> {
+            return nsArray as! [T]
         }
     }
 }
